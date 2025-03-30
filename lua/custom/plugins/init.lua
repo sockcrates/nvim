@@ -3,8 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'javascript', 'javascriptreact', 'lua', 'typescript', 'typescriptreact' },
   callback = function()
