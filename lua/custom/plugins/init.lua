@@ -19,13 +19,11 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-local prettierThenEslint = function()
-  return { 'prettier', 'eslint' }
-end
-require('conform').formatters_by_ft.javascript = prettierThenEslint
-require('conform').formatters_by_ft.javascriptreact = prettierThenEslint
-require('conform').formatters_by_ft.typescript = prettierThenEslint
-require('conform').formatters_by_ft.typescriptreact = prettierThenEslint
+local prettier_then_eslint = { 'prettier', 'eslint' }
+require('conform').formatters_by_ft.javascript = prettier_then_eslint
+require('conform').formatters_by_ft.javascriptreact = prettier_then_eslint
+require('conform').formatters_by_ft.typescript = prettier_then_eslint
+require('conform').formatters_by_ft.typescriptreact = prettier_then_eslint
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'c' },
