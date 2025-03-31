@@ -4,7 +4,13 @@
 -- See the kickstart.nvim README for more information
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'javascript', 'javascriptreact', 'lua', 'typescript', 'typescriptreact' },
+  pattern = {
+    'javascript',
+    'javascriptreact',
+    'lua',
+    'typescript',
+    'typescriptreact',
+  },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
