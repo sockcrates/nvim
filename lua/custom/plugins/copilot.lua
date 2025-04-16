@@ -23,7 +23,7 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          accept = '<M-a>',
+          accept = '<M-y>',
           accept_word = '<M-l>',
           accept_line = '<M-L>',
           next = '<M-]>',
