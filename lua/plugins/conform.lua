@@ -30,6 +30,11 @@ return { -- Autoformat
         }
       end
     end,
+    formatters = {
+      clang_format = {
+        prepend_args = { '--style=file', '--fallback-style=LLVM' },
+      },
+    },
     formatters_by_ft = {
       c = { 'clang-format' },
       javascript = prettier_then_eslint,
