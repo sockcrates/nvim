@@ -251,6 +251,8 @@ return {
       require('cmp_nvim_lsp').default_capabilities()
     )
 
+    local util = require 'lspconfig.util'
+
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
     --
@@ -261,6 +263,32 @@ return {
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
+      biome = {
+        cmd = { 'biome', 'lsp-proxy' },
+        filetypes = {
+          'astro',
+          'css',
+          'graphql',
+          'javascript',
+          'javascriptreact',
+          'json',
+          'jsonc',
+          'svelte',
+          'typescript',
+          'typescript.tsx',
+          'typescriptreact',
+          'vue',
+        },
+        workspace_required = true,
+        root_dir = function(fname)
+          local root_files = { 'biome.json', 'biome.jsonc' }
+          root_files = util.insert_package_json(root_files, 'biome', fname)
+          local root_dir = vim.fs.dirname(
+            vim.fs.find(root_files, { path = fname, upward = true })[1]
+          )
+          return root_dir
+        end,
+      },
       clangd = {
         capabilities,
       },
