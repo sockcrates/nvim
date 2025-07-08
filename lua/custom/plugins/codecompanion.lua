@@ -19,5 +19,26 @@ return {
         },
       },
     }
+
+    vim.keymap.set(
+      'n',
+      '<leader>ci',
+      '<cmd>CodeCompanion<CR>',
+      { desc = 'Open CodeCompanion Inline Prompt' }
+    )
+
+    vim.keymap.set(
+      'n',
+      '<leader>cc',
+      '<cmd>CodeCompanionChat<CR>',
+      { desc = 'Open CodeCompanion Chat' }
+    )
+
+    vim.keymap.set(
+      'n',
+      '<leader>co',
+      '<cmd>CodeCompanionActions<CR>',
+      { desc = 'Open CodeCompanion Actions' }
+    )
   end,
 }
