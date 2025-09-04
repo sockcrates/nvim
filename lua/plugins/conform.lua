@@ -1,5 +1,3 @@
-local prettier_then_eslint = { 'prettier', 'eslint' }
-
 return { -- Autoformat
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
@@ -37,11 +35,11 @@ return { -- Autoformat
     },
     formatters_by_ft = {
       c = { 'clang-format' },
-      javascript = prettier_then_eslint,
-      javascriptreact = prettier_then_eslint,
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       lua = { 'stylua' },
-      typescript = prettier_then_eslint,
-      typescriptreact = prettier_then_eslint,
+      typescript = { 'prettierd', 'prettier', stop_after_first = true },
+      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
