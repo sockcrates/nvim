@@ -1,4 +1,5 @@
-return { -- Autoformat
+-- Autoformat: fixes files by modifying them.
+return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
   cmd = { 'ConformInfo' },

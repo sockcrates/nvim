@@ -1,5 +1,7 @@
+-- Linting: only showing errors and warnings; no auto-fixing (that's for a
+-- formatter to do).
 return {
-  { -- Linting
+  {
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
