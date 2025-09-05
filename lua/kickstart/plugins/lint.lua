@@ -1,5 +1,19 @@
 -- Linting: only showing errors and warnings; no auto-fixing (that's for a
 -- formatter to do).
+local js_tools = {}
+
+local look_for_linters = require 'utils.look_for_linters'
+if look_for_linters.find_biome() then
+  -- The linter in biome is called 'biomejs' in nvim-lint.
+  js_tools = { 'biomejs' }
+elseif look_for_linters.find_eslint() then
+  if vim.fn.executable 'eslint_d' == 1 then
+    js_tools = { 'eslint_d' }
+  else
+    js_tools = { 'eslint' }
+  end
+end
+
 return {
   {
     'mfussenegger/nvim-lint',
@@ -7,11 +21,11 @@ return {
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
-        javascript = { 'eslint' },
-        javascriptreact = { 'eslint' },
+        javascript = js_tools,
+        javascriptreact = js_tools,
         markdown = { 'markdownlint' },
-        typescript = { 'eslint' },
-        typescriptreact = { 'eslint' },
+        typescript = js_tools,
+        typescriptreact = js_tools,
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

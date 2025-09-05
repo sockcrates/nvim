@@ -1,3 +1,4 @@
+-- Autoformat: fixes files by modifying them.
 local js_tools = nil
 
 local look_for_linters = require 'utils.look_for_linters'
@@ -25,7 +26,6 @@ else
   end
 end
 
--- Autoformat: fixes files by modifying them.
 return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
