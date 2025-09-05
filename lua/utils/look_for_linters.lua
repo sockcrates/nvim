@@ -7,25 +7,68 @@ local eslint_config_files = {
   '.eslintrc.json',
   '.eslintrc.yaml',
   '.eslintrc.yml',
-  'package.json', -- eslint config can be in package.json under "eslintConfig" field
+  'eslint.config.js',
+  'eslint.config.cjs',
+  'eslint.config.mjs',
+  'eslint.config.ts',
+  'eslint.config.cts',
+  'eslint.config.mts',
 }
+
+local function eslint_exists_in_dir(dir)
+  local files = require 'utils.files'
+
+  if files.dir_contains_set_of_files(dir, eslint_config_files) then
+    return true
+  end
+
+  -- package.json can also contain eslint config
+  if files.dir_contains_file(dir, 'package.json') then
+    local package_json_path = dir .. '/package.json'
+    local file = io.open(package_json_path, 'r')
+    if file then
+      local content = file:read '*a'
+      file:close()
+      if content and content:match '"eslintConfig"%s*:' then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+local has_eslint_cached = nil
 
 --- Searches for eslint configuration files in the nearest git repository root.
 ---
 --- @return boolean True if any eslint config file is found, false otherwise.
-local function find_eslint()
-  local files = require 'utils.files'
-  local git = require 'utils.git'
+function M.find_eslint()
+  if has_eslint_cached ~= nil then
+    return has_eslint_cached
+  end
 
+  if eslint_exists_in_dir(vim.fn.getcwd()) then
+    has_eslint_cached = true
+    return true
+  end
+
+  local git = require 'utils.git'
   local git_root = git.find_nearest_git_root()
   if git_root then
-    return files.dir_contains_set_of_files(git_root, eslint_config_files)
+    if eslint_exists_in_dir(git_root) then
+      has_eslint_cached = true
+      return true
+    end
   end
-  return false
-end
 
-function M.has_linter_config_file()
-  return find_eslint() ~= false
+  if vim.fn.executable 'eslint' == 1 then
+    has_eslint_cached = true
+    return true
+  end
+
+  has_eslint_cached = false
+  return false
 end
 
 return M
