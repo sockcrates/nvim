@@ -63,11 +63,11 @@ return {
     },
     formatters_by_ft = {
       c = { 'clang-format' },
-      javascript = { 'prettierd', 'prettier', stop_after_first = true },
-      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      javascript = js_tools,
+      javascriptreact = js_tools,
       lua = { 'stylua' },
-      typescript = { 'prettierd', 'prettier', stop_after_first = true },
-      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      typescript = js_tools,
+      typescriptreact = js_tools,
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --

@@ -67,7 +67,7 @@ function M.find_eslint()
     end
   end
 
-  if vim.fn.executable 'eslint' == 1 then
+  if vim.fn.executable 'eslint' == 1 or vim.fn.executable 'eslint_d' then
     has_eslint_cached = true
     return true
   end
