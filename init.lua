@@ -232,10 +232,31 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  { import = 'plugins' },
+  --
+  -- { import = 'plugins' },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
+
+  require 'plugins.ai-chat',
+  require 'plugins.auto-tab',
+  require 'plugins.autocompletion',
+  require 'plugins.colorscheme',
+  require 'plugins.copilot',
+  require 'plugins.finder',
+  require 'plugins.formatter',
+  require 'plugins.git-blame',
+  require 'plugins.git-signs',
+  require 'plugins.imp-clip',
+  require 'plugins.key-bindings',
+  require 'plugins.lsp',
+  require 'plugins.markdown-viewer',
+  require 'plugins.mini',
+  require 'plugins.parser',
+  require 'plugins.todo-comments',
+
+  -- Language specific plugins.
+  { import = 'languages' },
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
   --
@@ -253,7 +274,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  { import = 'custom.plugins' },
+  -- { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
