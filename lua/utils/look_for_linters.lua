@@ -168,7 +168,9 @@ function M.find_prettier()
     end
   end
 
-  if vim.fn.executable 'prettier' == 1 then
+  if
+    vim.fn.executable 'prettier' == 1 or vim.fn.executable 'prettierd' == 1
+  then
     has_prettier_cached = true
     return true
   end

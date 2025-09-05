@@ -1,3 +1,30 @@
+local js_tools = nil
+
+local look_for_linters = require 'utils.look_for_linters'
+if look_for_linters.find_biome() then
+  js_tools = { 'biome' }
+else
+  if look_for_linters.find_prettier() then
+    if vim.fn.executable 'prettierd' == 1 then
+      js_tools = { 'prettierd' }
+    else
+      js_tools = { 'prettier' }
+    end
+  end
+
+  if look_for_linters.find_eslint() then
+    if js_tools == nil then
+      js_tools = {}
+    end
+
+    if vim.fn.executable 'eslint_d' == 1 then
+      table.insert(js_tools, 1, 'eslint_d')
+    else
+      table.insert(js_tools, 1, 'eslint')
+    end
+  end
+end
+
 -- Autoformat: fixes files by modifying them.
 return {
   'stevearc/conform.nvim',
