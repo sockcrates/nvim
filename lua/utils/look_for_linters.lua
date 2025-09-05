@@ -40,7 +40,8 @@ end
 
 local has_eslint_cached = nil
 
---- Searches for eslint configuration files in the nearest git repository root.
+--- Searches for eslint configuration files in the current directory, nearest
+--- git root, or an eslint installation.
 ---
 --- @return boolean True if any eslint config file is found, false otherwise.
 function M.find_eslint()
