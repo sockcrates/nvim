@@ -1,5 +1,18 @@
 local M = {}
 
+local function exists_in_package_json(dir, key)
+  local package_json_path = dir .. '/package.json'
+  local file = io.open(package_json_path, 'r')
+  if file then
+    local content = file:read '*a'
+    file:close()
+    if content and content:match('"' .. key .. '"%s*:') then
+      return true
+    end
+  end
+  return false
+end
+
 local eslint_config_files = {
   '.eslintrc',
   '.eslintrc.js',
@@ -22,17 +35,8 @@ local function eslint_exists_in_dir(dir)
     return true
   end
 
-  -- package.json can also contain eslint config
-  if files.dir_contains_file(dir, 'package.json') then
-    local package_json_path = dir .. '/package.json'
-    local file = io.open(package_json_path, 'r')
-    if file then
-      local content = file:read '*a'
-      file:close()
-      if content and content:match '"eslintConfig"%s*:' then
-        return true
-      end
-    end
+  if exists_in_package_json(dir, 'eslintConfig') then
+    return true
   end
 
   return false
@@ -104,6 +108,72 @@ function M.find_biome()
   end
 
   has_biome_cached = true
+  return false
+end
+
+local prettier_config_files = {
+  '.prettierrc',
+  '.prettierrc.json',
+  '.prettierrc.json5',
+  '.prettierrc.yaml',
+  '.prettierrc.yml',
+  '.prettierrc.js',
+  '.prettierrc.cjs',
+  '.prettierrc.mjs',
+  '.prettierrc.toml',
+  'prettier.config.js',
+  'prettier.config.cjs',
+  'prettier.config.mjs',
+  'prettier.config.ts',
+  'prettier.config.cts',
+  'prettier.config.mts',
+}
+
+local function prettier_exists_in_dir(dir)
+  local files = require 'utils.files'
+
+  if files.dir_contains_set_of_files(dir, prettier_config_files) then
+    return true
+  end
+
+  if exists_in_package_json(dir, 'prettier') then
+    return true
+  end
+
+  return false
+end
+
+local has_prettier_cached = nil
+
+--- Searches for prettier configuration files in the current directory or
+--- nearest git root.
+---
+--- @return boolean True if any prettier config file is found, false otherwise.
+function M.find_prettier()
+  if has_prettier_cached ~= nil then
+    return has_prettier_cached
+  end
+
+  if prettier_exists_in_dir(vim.fn.getcwd()) then
+    has_prettier_cached = true
+    return true
+  end
+
+  local git = require 'utils.git'
+  local git_root = git.find_nearest_git_root()
+  if git_root then
+    if prettier_exists_in_dir(git_root) then
+      has_prettier_cached = true
+      return true
+    end
+  end
+
+  if vim.fn.executable 'prettier' == 1 then
+    has_prettier_cached = true
+    return true
+  end
+
+  has_prettier_cached = false
   return false
 end
 
