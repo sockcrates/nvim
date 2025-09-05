@@ -23,7 +23,7 @@ return {
       lint.linters_by_ft = {
         javascript = js_tools,
         javascriptreact = js_tools,
-        markdown = { 'markdownlint' },
+        markdown = { 'markdownlint-cli2' },
         typescript = js_tools,
         typescriptreact = js_tools,
       }
