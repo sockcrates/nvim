@@ -333,7 +333,6 @@ return {
         settings = {
           -- Run `:EslintFixAll` to fix problems
           -- autoFixOnSave = true,
-          -- See `:help eslint-language-server` for additional options
         },
       }
     end
