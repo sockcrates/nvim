@@ -169,7 +169,7 @@ function M.find_prettier()
   end
 
   if
-    vim.fn.executable 'prettier' == 1 or vim.fn.executable 'prettierd' == 1
+      vim.fn.executable 'prettier' == 1 or vim.fn.executable 'prettierd' == 1
   then
     has_prettier_cached = true
     return true
@@ -177,6 +177,39 @@ function M.find_prettier()
 
   has_prettier_cached = false
   return false
+end
+
+local has_flake8_cached, flake_8_location_cached = nil, nil
+
+--- Searches for flake8 in the system or in a pipenv virtual environment.
+---
+--- @return boolean, string|nil
+function M.find_flake8()
+  if has_flake8_cached ~= nil then
+    return has_flake8_cached, flake_8_location_cached
+  end
+
+  if vim.fn.executable 'flake8' == 1 then
+    flake_8_location_cached = vim.fn.exepath 'flake8'
+    has_flake8_cached = true
+    return has_flake8_cached, flake_8_location_cached
+  end
+
+  if vim.fn.executable('pipenv') == 1 then
+    -- Look for flake8 in a virtual environment
+    local output = vim.fn.systemlist("pipenv --venv")
+    local venv = output[#output]
+
+    if vim.fn.isdirectory(venv) == 1 then
+      flake_8_location_cached = venv .. '/bin/flake8'
+      has_flake8_cached = vim.fn.filereadable(flake_8_location_cached) == 1
+      return has_flake8_cached, flake_8_location_cached
+    end
+  end
+
+  has_flake8_cached = false
+  flake_8_location_cached = nil
+  return has_flake8_cached, flake_8_location_cached
 end
 
 return M
