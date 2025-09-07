@@ -239,6 +239,8 @@ require('lazy').setup({
   -- require 'plugins.autopairs',
   require 'plugins.colorscheme',
   require 'plugins.copilot',
+  -- Used for work
+  require 'plugins.docgen',
   -- require 'plugins.debug',
   -- require 'plugins.file-tree',
   require 'plugins.finder',
