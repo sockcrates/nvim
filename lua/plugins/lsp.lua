@@ -1,4 +1,4 @@
-local use_mason = os.getenv 'USE_MASON' == '1'
+local use_mason = os.getenv 'NVIM_USE_MASON' == '1'
 
 return {
   -- Main LSP Configuration
