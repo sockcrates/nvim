@@ -107,7 +107,7 @@ function M.find_biome()
     end
   end
 
-  has_biome_cached = true
+  has_biome_cached = false
   return false
 end
 
