@@ -24,6 +24,7 @@ return {
         javascript = js_tools,
         javascriptreact = js_tools,
         markdown = { 'markdownlint-cli2' },
+        python = { 'flake8' },
         typescript = js_tools,
         typescriptreact = js_tools,
       }
