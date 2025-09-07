@@ -179,15 +179,23 @@ function M.find_prettier()
   return false
 end
 
+local has_venv_path_cached, venv_path_cached = false, nil
+
 local function get_venv_path()
+  if has_venv_path_cached == true then
+    return venv_path_cached
+  end
   if vim.fn.executable('pipenv') == 1 then
     -- Look for flake8 in a virtual environment
     local output = vim.fn.systemlist("pipenv --venv")
     local venv = output[#output]
     if vim.fn.isdirectory(venv) == 1 then
+      has_venv_path_cached = true
+      venv_path_cached = venv
       return venv
     end
   end
+  has_venv_path_cached = true
   return nil
 end
 
@@ -217,6 +225,66 @@ function M.find_flake8()
   has_flake8_cached = false
   flake_8_location_cached = nil
   return has_flake8_cached, flake_8_location_cached
+end
+
+local has_black_cached, black_location_cached = nil, nil
+
+--- Searches for black in the system or in a pipenv virtual environment.
+---
+--- @return boolean, string|nil
+function M.find_black()
+  if has_black_cached ~= nil then
+    return has_black_cached, black_location_cached
+  end
+
+  if vim.fn.executable 'black' == 1 then
+    black_location_cached = vim.fn.exepath 'black'
+    has_black_cached = true
+    return has_black_cached, black_location_cached
+  end
+
+  local venv = get_venv_path()
+  if venv ~= nil then
+    black_location_cached = venv .. '/bin/black'
+    has_black_cached = vim.fn.filereadable(black_location_cached) == 1
+    if has_black_cached then
+      return has_black_cached, black_location_cached
+    end
+  end
+
+  has_black_cached = false
+  black_location_cached = nil
+  return has_black_cached, black_location_cached
+end
+
+local has_isort_cached, isort_location_cached = nil, nil
+
+--- Searches for black in the system or in a pipenv virtual environment.
+---
+--- @return boolean, string|nil
+function M.find_isort()
+  if has_isort_cached ~= nil then
+    return has_isort_cached, isort_location_cached
+  end
+
+  if vim.fn.executable 'isort' == 1 then
+    isort_location_cached = vim.fn.exepath 'isort'
+    has_isort_cached = true
+    return has_isort_cached, isort_location_cached
+  end
+
+  local venv = get_venv_path()
+  if venv ~= nil then
+    isort_location_cached = venv .. '/bin/isort'
+    has_isort_cached = vim.fn.filereadable(isort_location_cached) == 1
+    if has_isort_cached then
+      return has_isort_cached, isort_location_cached
+    end
+  end
+
+  has_isort_cached = false
+  isort_location_cached = nil
+  return has_isort_cached, isort_location_cached
 end
 
 return M

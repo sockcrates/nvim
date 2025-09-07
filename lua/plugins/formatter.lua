@@ -57,10 +57,20 @@ return {
       end
     end,
     formatters = {
+      black = {
+        command = function()
+          local _, black_path = look_for_linters.find_black()
+          return black_path or 'black'
+        end,
+      },
       clang_format = {
         prepend_args = { '--style=file', '--fallback-style=LLVM' },
       },
       isort = {
+        command = function()
+          local _, isort_path = look_for_linters.find_isort()
+          return isort_path or 'isort'
+        end,
         prepend_args = { '--profile', 'black' },
       },
     },
