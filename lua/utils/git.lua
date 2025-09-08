@@ -10,16 +10,7 @@ function M.find_git_ancestor()
     return git_root_cached
   end
 
-  local handle = io.popen('git rev-parse --show-toplevel 2>/dev/null', 'r')
-  if not handle then
-    git_root_cached = nil
-    has_git_root_cached = true
-    return git_root_cached
-  end
-
-  local git_root = handle:read '*l'
-  handle:close()
-
+  local git_root = vim.fn.system('git rev-parse --show-toplevel 2>/dev/null')
   if git_root and git_root ~= '' then
     git_root = git_root:gsub('%s*$', '')
 
