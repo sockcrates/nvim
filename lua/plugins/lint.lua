@@ -2,7 +2,7 @@
 -- formatter to do).
 local js_tools = {}
 
-local linters = require 'utils.look_for_linters'
+local linters = require 'utils.tooling'
 if linters.find_biome() then
   -- The linter in biome is called 'biomejs' in nvim-lint.
   js_tools = { 'biomejs' }

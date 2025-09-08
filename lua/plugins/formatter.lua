@@ -1,11 +1,11 @@
 -- Autoformat: fixes files by modifying them.
 local js_tools = nil
 
-local look_for_linters = require 'utils.look_for_linters'
-if look_for_linters.find_biome() then
+local tooling = require 'utils.tooling'
+if tooling.find_biome() then
   js_tools = { 'biome' }
 else
-  if look_for_linters.find_prettier() then
+  if tooling.find_prettier() then
     if vim.fn.executable 'prettierd' == 1 then
       js_tools = { 'prettierd' }
     else
@@ -13,7 +13,7 @@ else
     end
   end
 
-  if look_for_linters.find_eslint() then
+  if tooling.find_eslint() then
     if js_tools == nil then
       js_tools = {}
     end
@@ -59,7 +59,7 @@ return {
     formatters = {
       black = {
         command = function()
-          local _, black_path = look_for_linters.find_black()
+          local _, black_path = tooling.find_black()
           return black_path or 'black'
         end,
       },
@@ -68,7 +68,7 @@ return {
       },
       isort = {
         command = function()
-          local _, isort_path = look_for_linters.find_isort()
+          local _, isort_path = tooling.find_isort()
           return isort_path or 'isort'
         end,
         prepend_args = { '--profile', 'black' },

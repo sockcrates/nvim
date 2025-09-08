@@ -7,12 +7,12 @@ return {
     -- Automatically install LSPs and related tools to stdpath for Neovim
     -- Mason must be loaded before its dependents so we need to set it up here.
     -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-    { 'williamboman/mason.nvim', cond = use_mason, opts = {} },
-    { 'williamboman/mason-lspconfig.nvim', cond = use_mason },
+    { 'williamboman/mason.nvim',                   cond = use_mason, opts = {} },
+    { 'williamboman/mason-lspconfig.nvim',         cond = use_mason },
     { 'WhoIsSethDaniel/mason-tool-installer.nvim', cond = use_mason },
 
     -- Useful status updates for LSP.
-    { 'j-hui/fidget.nvim', opts = {} },
+    { 'j-hui/fidget.nvim',                         opts = {} },
 
     -- Allows extra capabilities provided by nvim-cmp
     'hrsh7th/cmp-nvim-lsp',
@@ -154,12 +154,12 @@ return {
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if
-          client
-          and client_supports_method(
-            client,
-            vim.lsp.protocol.Methods.textDocument_documentHighlight,
-            event.buf
-          )
+            client
+            and client_supports_method(
+              client,
+              vim.lsp.protocol.Methods.textDocument_documentHighlight,
+              event.buf
+            )
         then
           local highlight_augroup = vim.api.nvim_create_augroup(
             'kickstart-lsp-highlight',
@@ -197,12 +197,12 @@ return {
         --
         -- This may be unwanted, since they displace some of your code
         if
-          client
-          and client_supports_method(
-            client,
-            vim.lsp.protocol.Methods.textDocument_inlayHint,
-            event.buf
-          )
+            client
+            and client_supports_method(
+              client,
+              vim.lsp.protocol.Methods.textDocument_inlayHint,
+              event.buf
+            )
         then
           map('<leader>th', function()
             vim.lsp.inlay_hint.enable(
@@ -291,7 +291,7 @@ return {
       ts_ls = {},
     }
 
-    local linters = require 'utils.look_for_linters'
+    local linters = require 'utils.tooling'
 
     if linters.find_biome() == true then
       servers.biome = {
