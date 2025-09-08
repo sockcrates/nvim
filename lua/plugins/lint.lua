@@ -2,11 +2,11 @@
 -- formatter to do).
 local js_tools = {}
 
-local linters = require 'utils.tooling'
-if linters.find_biome() then
+local tooling = require 'utils.tooling'
+if tooling.find_biome() then
   -- The linter in biome is called 'biomejs' in nvim-lint.
   js_tools = { 'biomejs' }
-elseif linters.find_eslint() then
+elseif tooling.find_eslint() then
   if vim.fn.executable 'eslint_d' == 1 then
     js_tools = { 'eslint_d' }
   else
@@ -29,7 +29,7 @@ return {
         typescriptreact = js_tools,
       }
 
-      local _, flake8_bin_path = linters.find_flake8()
+      local _, flake8_bin_path = tooling.find_flake8()
       lint.linters.flake8.cmd = flake8_bin_path or 'flake8';
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

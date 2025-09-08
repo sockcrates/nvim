@@ -291,9 +291,9 @@ return {
       ts_ls = {},
     }
 
-    local linters = require 'utils.tooling'
+    local tooling = require 'utils.tooling'
 
-    if linters.find_biome() == true then
+    if tooling.find_biome() == true then
       servers.biome = {
         cmd = { 'biome', 'lsp-proxy' },
         filetypes = {
@@ -325,7 +325,7 @@ return {
       }
     end
 
-    if linters.find_eslint() == true then
+    if tooling.find_eslint() == true then
       servers.eslint = {
         -- cmd = { ... },
         -- filetypes = { ... },
