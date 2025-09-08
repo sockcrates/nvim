@@ -59,7 +59,7 @@ function M.find_eslint()
   end
 
   local git = require 'utils.git'
-  local git_root = git.find_nearest_git_root()
+  local git_root = git.find_git_ancestor()
   if git_root then
     if eslint_exists_in_dir(git_root) then
       has_eslint_cached = true
@@ -99,7 +99,7 @@ function M.find_biome()
   end
 
   local git = require 'utils.git'
-  local git_root = git.find_nearest_git_root()
+  local git_root = git.find_git_ancestor()
   if git_root then
     if files.dir_contains_set_of_files(git_root, biome_config_files) then
       has_biome_cached = true
@@ -160,7 +160,7 @@ function M.find_prettier()
   end
 
   local git = require 'utils.git'
-  local git_root = git.find_nearest_git_root()
+  local git_root = git.find_git_ancestor()
   if git_root then
     if prettier_exists_in_dir(git_root) then
       has_prettier_cached = true

@@ -2,10 +2,10 @@ local M = {}
 
 local has_git_root_cached, git_root_cached = false, nil
 
---- Finds the nearest Git repository root.
+--- Finds the nearest Git repository root or returns nil if not found.
 ---
 --- @return string|nil
-function M.find_nearest_git_root()
+function M.find_git_ancestor()
   if has_git_root_cached == true then
     return git_root_cached
   end
