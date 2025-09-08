@@ -1,24 +1,20 @@
-local M = {} -- M is a common convention for a module's public interface
+local M = {}
 
-local cached_git_root = nil -- This will store the result after the first call
+local has_git_root_cached, git_root_cached = false, nil
 
---- Finds the nearest Git repository root by executing 'git rev-parse --show-toplevel'.
---- The result is cached after the first successful execution.
+--- Finds the nearest Git repository root.
 ---
---- @return string|nil The absolute path to the Git root, or nil if not found.
+--- @return string|nil
 function M.find_nearest_git_root()
-  -- If we've already found and cached the git root, return it immediately
-  if cached_git_root ~= nil then
-    return cached_git_root
+  if has_git_root_cached == true then
+    return git_root_cached
   end
 
-  -- If not cached, proceed to find it
   local handle = io.popen('git rev-parse --show-toplevel 2>/dev/null', 'r')
   if not handle then
-    -- Store nil if command fails, so we don't try again (unless you want to retry later)
-    -- For now, we'll cache the nil result to prevent repeated attempts.
-    cached_git_root = nil
-    return nil
+    git_root_cached = nil
+    has_git_root_cached = true
+    return git_root_cached
   end
 
   local git_root = handle:read '*l'
@@ -27,17 +23,17 @@ function M.find_nearest_git_root()
   if git_root and git_root ~= '' then
     git_root = git_root:gsub('%s*$', '')
 
-    local stat = vim.loop.fs_stat(git_root)
+    local stat = (vim.uv or vim.loop).fs_stat(git_root)
     if stat and stat.type == 'directory' then
-      cached_git_root = git_root -- Cache the found root
+      git_root_cached = git_root
+      has_git_root_cached = true
       return git_root
     end
   end
 
-  -- If we reach here, it means no valid git root was found.
-  -- Cache nil to avoid re-running the command unnecessarily.
-  cached_git_root = nil
-  return nil
+  git_root_cached = nil
+  has_git_root_cached = true
+  return git_root_cached
 end
 
 return M
