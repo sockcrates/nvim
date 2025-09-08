@@ -28,7 +28,7 @@ local eslint_config_files = {
   'eslint.config.mts',
 }
 
-local function eslint_exists_in_dir(dir)
+local function eslint_config_exists_in_dir(dir)
   local files = require 'utils.files'
 
   if files.dir_contains_set_of_files(dir, eslint_config_files) then
@@ -53,7 +53,7 @@ function M.find_eslint()
     return has_eslint_cached
   end
 
-  if eslint_exists_in_dir(vim.fn.getcwd()) then
+  if eslint_config_exists_in_dir(vim.fn.getcwd()) then
     has_eslint_cached = true
     return true
   end
@@ -61,7 +61,7 @@ function M.find_eslint()
   local git = require 'utils.git'
   local git_root = git.find_git_ancestor()
   if git_root then
-    if eslint_exists_in_dir(git_root) then
+    if eslint_config_exists_in_dir(git_root) then
       has_eslint_cached = true
       return true
     end
