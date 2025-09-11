@@ -12,8 +12,6 @@ return {
         history = {
           enabled = true,
           opts = {
-            -- Keymap to save the current chat manually (when auto_save is disabled)
-            save_chat_keymap = "sc",
             -- Save all chats by default (disable to save only manually using 'sc')
             auto_save = true,
             -- Number of days after which chats are automatically deleted (0 to disable)
@@ -109,6 +107,15 @@ return {
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'codecompanion',
       callback = function()
+        local codecompanion = require("codecompanion");
+        local chat_history = codecompanion.extensions.history;
+
+        vim.keymap.set('n', 'sc', function()
+          local buffer = vim.api.nvim_get_current_buf();
+          local chat = codecompanion.buf_get_chat(buffer)
+          chat_history.save_chat(chat);
+        end, { buffer = true, desc = 'Save Chat' })
+
         vim.keymap.set('n', 'gh', '<cmd>CodeCompanionHistory<CR>', { buffer = true, desc = 'Open Chat History' })
       end,
     })
