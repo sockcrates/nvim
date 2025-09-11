@@ -5,6 +5,7 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-treesitter/nvim-treesitter',
     'ravitemer/codecompanion-history.nvim',
+    'Davidyz/VectorCode',
   },
   config = function()
     require('codecompanion').setup {
@@ -88,7 +89,41 @@ return {
               index_on_startup = false,
             },
           }
-        }
+        },
+        vectorcode = {
+          opts = {
+            tool_group = {
+              collapse = false, -- whether the individual tools should be shown in the chat
+              -- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
+              enabled = true,
+              -- a list of extra tools that you want to include in `@vectorcode_toolbox`.
+              -- if you use @vectorcode_vectorise, it'll be very handy to include
+              -- `file_search` here.
+              extras = {},
+              file_search = {},
+            },
+            tool_opts = {
+              ["*"] = {},
+              ls = {},
+              vectorise = {},
+              query = {
+                max_num = { chunk = -1, document = -1 },
+                default_num = { chunk = 50, document = 10 },
+                include_stderr = false,
+                use_lsp = false,
+                no_duplicate = true,
+                chunk_mode = false,
+                summarise = {
+                  enabled = false,
+                  adapter = nil,
+                  query_augmented = true,
+                },
+              },
+              files_ls = {},
+              files_rm = {},
+            },
+          },
+        },
       },
 
       strategies = {
