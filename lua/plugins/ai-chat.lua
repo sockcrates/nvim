@@ -12,8 +12,6 @@ return {
         history = {
           enabled = true,
           opts = {
-            -- Keymap to open history from chat buffer (default: gh)
-            keymap = "gh",
             -- Keymap to save the current chat manually (when auto_save is disabled)
             save_chat_keymap = "sc",
             -- Save all chats by default (disable to save only manually using 'sc')
@@ -107,6 +105,13 @@ return {
         },
       },
     }
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'codecompanion',
+      callback = function()
+        vim.keymap.set('n', 'gh', '<cmd>CodeCompanionHistory<CR>', { buffer = true, desc = 'Open Chat History' })
+      end,
+    })
 
     vim.keymap.set(
       'n',
