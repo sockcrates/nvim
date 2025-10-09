@@ -42,38 +42,111 @@ local function eslint_config_exists_in_dir(dir)
   return false
 end
 
+--- @alias EslintMode ('eslint' | 'eslint_d' | nil)
+
+--- @class EslintPathResult
+--- @field mode EslintMode The variant of eslint found ('eslint' or 'eslint
+--- _d').
+--- @field path string|nil Path to the eslint executable.
+--- @field root string|nil The root directory where eslint was found.
+
+--- @type EslintPathResult|nil
+local eslint_path_cached = nil
+
+--- @return EslintPathResult
+local function find_eslint_path()
+  if eslint_path_cached ~= nil then
+    return eslint_path_cached
+  end
+
+  local root = vim.fs.root(0, { 'package.json', '.git' })
+  if root then
+    local eslintd_path =
+      vim.fs.joinpath(root, 'node_modules', '.bin', 'eslint_d')
+    if vim.fn.executable(eslintd_path) == 1 then
+      eslint_path_cached =
+        { mode = 'eslint_d', path = eslintd_path, root = root }
+      return eslint_path_cached
+    end
+
+    local eslint_path = vim.fs.joinpath(root, 'node_modules', '.bin', 'eslint')
+    if vim.fn.executable(eslint_path) == 1 then
+      eslint_path_cached = { mode = 'eslint', path = eslint_path, root = root }
+      return eslint_path_cached
+    end
+  end
+  eslint_path_cached = { mode = nil, path = nil, root = nil }
+  return eslint_path_cached
+end
+
+--- @class ToolingEslintResult
+--- @field found boolean True if eslint is found or configured, false otherwise.
+--- @field mode EslintMode|nil The variant of eslint found ('eslint' or
+--- 'eslint_d'), nil if not found.
+--- @field path string|nil Path to the eslint executable if found, nil otherwise.
+--- @field root string|nil The root directory where eslint was found, nil if
+--- not found.
+
+--- @type ToolingEslintResult
 local has_eslint_cached = nil
 
---- Searches for eslint configuration files in the current directory, nearest
---- git root, or an eslint installation.
+--- Searches for eslint executable in the local project, global system, or
+--- checks for eslint configuration files in the current directory or nearest
+--- git root.
 ---
---- @return boolean True if any eslint config file is found, false otherwise.
+--- @return ToolingEslintResult
 function M.find_eslint()
   if has_eslint_cached ~= nil then
     return has_eslint_cached
   end
 
+  local eslint_path_result = find_eslint_path()
+  if eslint_path_cached ~= nil then
+    has_eslint_cached = {
+      found = true,
+      path = eslint_path_result.path,
+      mode = eslint_path_result.mode,
+    }
+    return has_eslint_cached
+  end
+
   if eslint_config_exists_in_dir(vim.fn.getcwd()) then
-    has_eslint_cached = true
-    return true
+    has_eslint_cached = {
+      found = true,
+      path = eslint_path_result.path,
+      mode = eslint_path_result.mode,
+    }
+    return has_eslint_cached
   end
 
   local git = require 'utils.git'
   local git_root = git.find_git_ancestor()
   if git_root then
     if eslint_config_exists_in_dir(git_root) then
-      has_eslint_cached = true
-      return true
+      has_eslint_cached = {
+        found = true,
+        path = eslint_path_result.path,
+        mode = eslint_path_result.mode,
+      }
+      return has_eslint_cached
     end
   end
 
   if vim.fn.executable 'eslint' == 1 or vim.fn.executable 'eslint_d' then
-    has_eslint_cached = true
-    return true
+    has_eslint_cached = {
+      found = true,
+      path = eslint_path_result.path,
+      mode = eslint_path_result.mode,
+    }
+    return has_eslint_cached
   end
 
-  has_eslint_cached = false
-  return false
+  has_eslint_cached = {
+    found = false,
+    path = eslint_path_result.path,
+    mode = eslint_path_result.mode,
+  }
+  return has_eslint_cached
 end
 
 local biome_config_files = {
@@ -169,7 +242,7 @@ function M.find_prettier()
   end
 
   if
-      vim.fn.executable 'prettier' == 1 or vim.fn.executable 'prettierd' == 1
+    vim.fn.executable 'prettier' == 1 or vim.fn.executable 'prettierd' == 1
   then
     has_prettier_cached = true
     return true
@@ -185,9 +258,9 @@ local function get_venv_path()
   if has_venv_path_cached == true then
     return venv_path_cached
   end
-  if vim.fn.executable('pipenv') == 1 then
+  if vim.fn.executable 'pipenv' == 1 then
     -- Look for flake8 in a virtual environment
-    local output = vim.fn.systemlist("pipenv --venv")
+    local output = vim.fn.systemlist 'pipenv --venv'
     local venv = output[#output]
     if vim.fn.isdirectory(venv) == 1 then
       has_venv_path_cached = true
