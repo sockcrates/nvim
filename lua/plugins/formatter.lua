@@ -1,7 +1,9 @@
 -- Autoformat: fixes files by modifying them.
-local js_tools = nil
-
 local tooling = require 'utils.tooling'
+
+local js_tools = nil
+local eslint = tooling.find_eslint()
+
 if tooling.find_biome() then
   js_tools = { 'biome' }
 else
@@ -13,16 +15,11 @@ else
     end
   end
 
-  if tooling.find_eslint() then
+  if eslint.found then
     if js_tools == nil then
       js_tools = {}
     end
-
-    if vim.fn.executable 'eslint_d' == 1 then
-      table.insert(js_tools, 1, 'eslint_d')
-    else
-      table.insert(js_tools, 1, 'eslint')
-    end
+    table.insert(js_tools, 'eslint_d')
   end
 end
 
@@ -66,6 +63,21 @@ return {
       clang_format = {
         prepend_args = { '--style=file', '--fallback-style=LLVM' },
       },
+      ---@type conform.FileFormatterConfig
+      eslint = {
+        args = {
+          '--stdin',
+          '--fix-dry-run',
+          '--format=json',
+          '--stdin-filename',
+          '$FILENAME',
+        },
+        command = eslint.path,
+        meta = {
+          url = 'https://eslint.org/',
+          description = 'An extensible linter for JavaScript and TypeScript',
+        },
+      },
       isort = {
         command = function()
           local _, isort_path = tooling.find_isort()
@@ -82,7 +94,7 @@ return {
       typescript = js_tools,
       typescriptreact = js_tools,
       -- Conform can also run multiple formatters sequentially
-      python = { "isort", "black" },
+      python = { 'isort', 'black' },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
